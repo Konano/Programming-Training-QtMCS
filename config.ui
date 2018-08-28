@@ -13,6 +13,18 @@
     <height>294</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>267</width>
+    <height>294</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>267</width>
+    <height>294</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -21,7 +33,7 @@
     <rect>
      <x>21</x>
      <y>31</y>
-     <width>232</width>
+     <width>227</width>
      <height>235</height>
     </rect>
    </property>
@@ -44,7 +56,7 @@
          <bool>true</bool>
         </property>
         <property name="text">
-         <string>5</string>
+         <string/>
         </property>
        </widget>
       </item>

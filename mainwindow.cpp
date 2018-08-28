@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    // 窗口大小
+    setFixedSize(450, 510);
+
     size = 8;
     for(int i=0; i<size; i++) input[i] = i<2;
     for(int i=0; i<size; i++) output[i] = i<3;
@@ -19,9 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::sceneNew()
 {
     scene = new QGraphicsScene(this);
-    ui->graphicsView->resize(431-(8-size)*45, 431-(8-size)*45);
-    this->resize(450-(8-size)*45, 517-(8-size)*45);
+    ui->graphicsView->resize(431-(8-size)*(pipeLength+pipeWidth), 431-(8-size)*(pipeLength+pipeWidth));
     ui->graphicsView->setScene(scene);
+    setFixedSize(450-(8-size)*(pipeLength+pipeWidth), 510-(8-size)*(pipeLength+pipeWidth));
 }
 
 void MainWindow::sceneDraw()
@@ -32,35 +35,54 @@ void MainWindow::sceneDraw()
     for(int i=0; i<size-1; i++)
         for(int j=0; j<size; j++)
         {
-            pipeRow[i][j] = new GraphItem(5+i*45, 0+j*45, 40, 5);
+            pipeRow[i][j] = new GraphItem(pipeWidth+i*(pipeLength+pipeWidth), 0+j*(pipeLength+pipeWidth), pipeLength, pipeWidth);
             scene->addItem(pipeRow[i][j]);
         }
 
     for(int i=0; i<size; i++)
         for(int j=0; j<size-1; j++)
         {
-            pipeCol[i][j] = new GraphItem(0+i*45, 5+j*45, 5, 40);
+            pipeCol[i][j] = new GraphItem(0+i*(pipeLength+pipeWidth), pipeWidth+j*(pipeLength+pipeWidth), pipeWidth, pipeLength);
             scene->addItem(pipeCol[i][j]);
         }
 
     for(int i=0; i<size; i++)
         for(int j=0; j<size; j++)
         {
-            square[i][j] = new GraphItem(0+i*45, 0+j*45, 5, 5, true);
+            square[i][j] = new GraphItem(0+i*(pipeLength+pipeWidth), 0+j*(pipeLength+pipeWidth), pipeWidth, pipeWidth, true);
             scene->addItem(square[i][j]);
         }
 
     for(int i=0; i<size; i++) if (input[i])
     {
-        pipeIn[i] = new GraphItem(0+i*45, 5-45, 5, 40, true);
+        pipeIn[i] = new GraphItem(0+i*(pipeLength+pipeWidth), -pipeLength/2, pipeWidth, pipeLength/2, true);
         scene->addItem(pipeIn[i]);
     }
 
     for(int i=0; i<size; i++) if (output[i])
     {
-        pipeOut[i] = new GraphItem(0+i*45, 5+(size-1)*45, 5, 40, true);
+        pipeOut[i] = new GraphItem(0+i*(pipeLength+pipeWidth), pipeWidth+(size-1)*(pipeLength+pipeWidth), pipeWidth, pipeLength/2, true);
         scene->addItem(pipeOut[i]);
     }
+
+    // 相邻元素
+
+    for(int i=0; i<size-1; i++)
+        for(int j=0; j<size; j++)
+            pipeRow[i][j]->setAdjacent(square[i][j],
+                                       square[i+1][j]);
+
+    for(int i=0; i<size; i++)
+        for(int j=0; j<size-1; j++)
+            pipeCol[i][j]->setAdjacent(square[i][j],
+                                       square[i][j+1]);
+
+    for(int i=0; i<size; i++)
+        for(int j=0; j<size; j++)
+            square[i][j]->setAdjacent(i<size-1 ? pipeRow[i][j] : NULL,
+                                      j<size-1 ? pipeCol[i][j] : NULL,
+                                      i ? pipeRow[i-1][j] : NULL,
+                                      j ? pipeCol[i][j-1] : NULL);
 }
 
 MainWindow::~MainWindow()
@@ -82,4 +104,21 @@ void MainWindow::create(int _size, bool *_input, bool *_output)
     for(int i=0; i<size; i++) output[i]=_output[i];
 
     sceneDraw();
+}
+
+void MainWindow::on_actionRandom_triggered()
+{
+    for(int i=0; i<size-1; i++)
+        for(int j=0; j<size; j++)
+            if (rand()%100 < 90)
+                pipeRow[i][j]->openPipe();
+            else
+                pipeRow[i][j]->closePipe();
+
+    for(int i=0; i<size; i++)
+        for(int j=0; j<size-1; j++)
+            if (rand()%100 < 90)
+                pipeCol[i][j]->openPipe();
+            else
+                pipeCol[i][j]->closePipe();
 }

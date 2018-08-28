@@ -23,13 +23,15 @@ public:
 
 private slots:
     void on_actionCreate_triggered();
-    void create(int,bool*,bool*);
+    void create(int, bool*, bool*);
+
+    void on_actionRandom_triggered();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     int size; bool input[8], output[8];
-    GraphItem *pipeRow[7][8], *pipeCol[8][7], *square[8][8], *pipeIn[8 ], *pipeOut[8];
+    GraphItem *pipeRow[7][8], *pipeCol[8][7], *square[8][8], *pipeIn[8], *pipeOut[8];
 };
 
 #endif // MAINWINDOW_H

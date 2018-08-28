@@ -4,6 +4,9 @@
 #include <QGraphicsItem>
 #include <QDebug>
 
+#define pipeLength 40
+#define pipeWidth 5
+
 class GraphItem : public QGraphicsItem
 {
 public:
@@ -14,6 +17,13 @@ public:
 
     bool Enable, NotChange;
     int x, y, width, height;
+    GraphItem *adjacent[4];
+
+    void setAdjacent(GraphItem *adj0, GraphItem *adj1, GraphItem *adj2 = NULL, GraphItem *adj3 = NULL);
+    void updateSquare();
+    void switchPipe();
+    void openPipe();
+    void closePipe();
 
 protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
