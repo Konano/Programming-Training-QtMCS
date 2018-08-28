@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     for(int i=0; i<size; i++) output[i] = i<3;
 
     sceneNew();
+    sceneDraw();
 }
 
 MainWindow::~MainWindow()
@@ -83,11 +84,13 @@ void MainWindow::sceneDraw()
         scene->addItem(textitem[i]);
         tmp++;
     }
+
+    Simulation();
 }
 
 void MainWindow::on_actionCreate_triggered()
 {
-    Config config(this);
+    Config config(size, input, output, this);
     connect(&config, SIGNAL(finish(int,bool*,bool*)), this, SLOT(create(int,bool*,bool*)));
     config.exec();
 }
@@ -99,11 +102,12 @@ void MainWindow::create(int _size, bool *_input, bool *_output)
     for(int i=0; i<size; i++) output[i]=_output[i];
 
     sceneDraw();
-    Simulation();
 }
 
 void MainWindow::on_actionRandom_triggered()
 {
+    Randoming = true;
+
     for(int i=0; i<size-1; i++)
         for(int j=0; j<size; j++)
             pipeRow[i][j]->setEnable(rand()%100 < 90);
@@ -111,12 +115,18 @@ void MainWindow::on_actionRandom_triggered()
     for(int i=0; i<size; i++)
         for(int j=0; j<size-1; j++)
             pipeCol[i][j]->setEnable(rand()%100 < 90);
+
+    Randoming = false;
+    chipChanged();
 }
 
 void MainWindow::chipChanged()
 {
-    updateCross();
-    Simulation();
+    if (!Randoming)
+    {
+        updateCross();
+        Simulation();
+    }
 }
 
 void MainWindow::updateCross()
@@ -139,6 +149,7 @@ void MainWindow::Simulation()
     int o1=0; while (!output[o1]) o1++;
     int o2=o1+1; while (!output[o2]) o2++;
     int o3=o2+1; while (!output[o3]) o3++;
+
     vector<double> length;
     for(int i=0; i<size; i++)
         for(int j=0; j<size-1; j++)
@@ -147,6 +158,7 @@ void MainWindow::Simulation()
         for(int j=0; j<size; j++)
             if (pipeRow[i][j]->isEnable()) length.push_back(1); else length.push_back(0);
     for(int i=0; i<2+3; i++) length.push_back(1);
+
     vector<double> result = caluconspeed(size, length, i1, i2, o1, o2, o3);
 
     for(int i=0; i<3; i++)

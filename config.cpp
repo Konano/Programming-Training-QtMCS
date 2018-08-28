@@ -2,71 +2,60 @@
 #include "ui_config.h"
 #include <QMessageBox>
 
-Config::Config(QWidget *parent) :
+Config::Config(int size, bool *input, bool *output, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Config)
 {
     ui->setupUi(this);
+
+    inCheckBox[0] = ui->checkBox_in_0;
+    inCheckBox[1] = ui->checkBox_in_1;
+    inCheckBox[2] = ui->checkBox_in_2;
+    inCheckBox[3] = ui->checkBox_in_3;
+    inCheckBox[4] = ui->checkBox_in_4;
+    inCheckBox[5] = ui->checkBox_in_5;
+    inCheckBox[6] = ui->checkBox_in_6;
+    inCheckBox[7] = ui->checkBox_in_7;
+
+    outCheckBox[0] = ui->checkBox_out_0;
+    outCheckBox[1] = ui->checkBox_out_1;
+    outCheckBox[2] = ui->checkBox_out_2;
+    outCheckBox[3] = ui->checkBox_out_3;
+    outCheckBox[4] = ui->checkBox_out_4;
+    outCheckBox[5] = ui->checkBox_out_5;
+    outCheckBox[6] = ui->checkBox_out_6;
+    outCheckBox[7] = ui->checkBox_out_7;
+
+    ui->sizeBox->setCurrentIndex(size-SizeMinLimit);
+    checkBoxEnableChange(size);
+
+    for(int i=0; i<size; i++) if (input[i]) inCheckBox[i]->setChecked(true);
+    for(int i=0; i<size; i++) if (output[i]) outCheckBox[i]->setChecked(true);
 }
 
 Config::~Config()
 {
     delete ui;
-}
-
-bool isDigitString(const QString& src)
-{
-    const char *s = src.toUtf8().data();
-    while(*s && *s>='0' && *s<='9') s++;
-    return !bool(*s);
+    for(int i=0; i<8; i++) delete inCheckBox[i];
+    for(int i=0; i<8; i++) delete outCheckBox[i];
 }
 
 void Config::on_pushButton_clicked()
 {
     QString error;
 
-    bool isNumber;
-    int size = ui->sizeEdit->text().toInt(&isNumber);
-    if (isNumber == false)
-    {
-        if (!error.isEmpty()) error += tr("\n");
-        error += tr("芯片大小输入有误");
-    }
-    else if (size < SizeMinLimit)
-    {
-        if (!error.isEmpty()) error += tr("\n");
-        error += tr("芯片大小小于") + QString::number(SizeMinLimit);
-    }
-    else if (size > SizeMaxLimit)
-    {
-        if (!error.isEmpty()) error += tr("\n");
-        error += tr("芯片大小大于") + QString::number(SizeMaxLimit);
-    }
+    int size = ui->sizeBox->currentIndex()+SizeMinLimit;
 
-    int InputPipes = 0; bool Input[8];
-    if (Input[0] = ui->checkBox_in_0->isChecked()) InputPipes++;
-    if (Input[1] = ui->checkBox_in_1->isChecked()) InputPipes++;
-    if (Input[2] = ui->checkBox_in_2->isChecked()) InputPipes++;
-    if (Input[3] = ui->checkBox_in_3->isChecked()) InputPipes++;
-    if (Input[4] = ui->checkBox_in_4->isChecked()) InputPipes++;
-    if (Input[5] = ui->checkBox_in_5->isChecked()) InputPipes++;
-    if (Input[6] = ui->checkBox_in_6->isChecked()) InputPipes++;
-    if (Input[7] = ui->checkBox_in_7->isChecked()) InputPipes++;
+    int InputPipes = 0; bool Input[size];
+    for(int i=0; i<size; i++) if (Input[i] = inCheckBox[i]->isChecked()) InputPipes++;
     if (InputPipes != InputPipesLimit)
     {
         if (!error.isEmpty()) error += tr("\n");
         error += tr("输入管道数量不为") + QString::number(InputPipesLimit);
     }
 
-    int OutputPipes = 0; bool Output[8];
-    if (Output[0] = ui->checkBox_out_0->isChecked()) OutputPipes++;
-    if (Output[1] = ui->checkBox_out_1->isChecked()) OutputPipes++;
-    if (Output[2] = ui->checkBox_out_2->isChecked()) OutputPipes++;
-    if (Output[3] = ui->checkBox_out_3->isChecked()) OutputPipes++;
-    if (Output[4] = ui->checkBox_out_4->isChecked()) OutputPipes++;
-    if (Output[5] = ui->checkBox_out_5->isChecked()) OutputPipes++;
-    if (Output[6] = ui->checkBox_out_6->isChecked()) OutputPipes++;
-    if (Output[7] = ui->checkBox_out_7->isChecked()) OutputPipes++;
+    int OutputPipes = 0; bool Output[size];
+    for(int i=0; i<size; i++) if (Output[i] = outCheckBox[i]->isChecked()) OutputPipes++;
     if (OutputPipes != OutputPipesLimit)
     {
         if (!error.isEmpty()) error += tr("\n");
@@ -82,4 +71,25 @@ void Config::on_pushButton_clicked()
         emit finish(size, Input, Output);
         accept();
     }
+}
+
+void Config::checkBoxEnableChange(int size)
+{
+    for(int i=0; i<8; i++)
+        if (i<size)
+        {
+            inCheckBox[i]->setEnabled(true);
+            outCheckBox[i]->setEnabled(true);
+        }
+        else
+        {
+            inCheckBox[i]->setChecked(false);
+            inCheckBox[i]->setEnabled(false);
+            outCheckBox[i]->setChecked(false);
+            outCheckBox[i]->setEnabled(false);
+        }
+}
+void Config::on_sizeBox_currentIndexChanged(int index)
+{
+    checkBoxEnableChange(index+SizeMinLimit);
 }

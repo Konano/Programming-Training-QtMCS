@@ -37,6 +37,8 @@ private:
     int size; bool input[8], output[8];
     GraphItem *pipeRow[7][8], *pipeCol[8][7], *cross[8][8], *pipeIn[8], *pipeOut[8];
     QGraphicsTextItem *textitem[3];
+
+    bool Randoming = false;
 };
 
 #endif // MAINWINDOW_H
