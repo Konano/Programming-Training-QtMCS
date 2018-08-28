@@ -79,7 +79,7 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QCheckBox" name="checkBox_in_1">
+         <widget class="QCheckBox" name="checkBox_in_0">
           <property name="text">
            <string>1</string>
           </property>
@@ -92,49 +92,49 @@
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_in_2">
+         <widget class="QCheckBox" name="checkBox_in_1">
           <property name="text">
            <string>2</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_in_3">
+         <widget class="QCheckBox" name="checkBox_in_2">
           <property name="text">
            <string>3</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_in_4">
+         <widget class="QCheckBox" name="checkBox_in_3">
           <property name="text">
            <string>4</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_in_5">
+         <widget class="QCheckBox" name="checkBox_in_4">
           <property name="text">
            <string>5</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_in_6">
+         <widget class="QCheckBox" name="checkBox_in_5">
           <property name="text">
            <string>6</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_in_7">
+         <widget class="QCheckBox" name="checkBox_in_6">
           <property name="text">
            <string>7</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_in_8">
+         <widget class="QCheckBox" name="checkBox_in_7">
           <property name="text">
            <string>8</string>
           </property>
@@ -169,56 +169,56 @@
       <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QCheckBox" name="checkBox_out_1">
+         <widget class="QCheckBox" name="checkBox_out_0">
           <property name="text">
            <string>1</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_out_2">
+         <widget class="QCheckBox" name="checkBox_out_1">
           <property name="text">
            <string>2</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_out_3">
+         <widget class="QCheckBox" name="checkBox_out_2">
           <property name="text">
            <string>3</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_out_4">
+         <widget class="QCheckBox" name="checkBox_out_3">
           <property name="text">
            <string>4</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_out_5">
+         <widget class="QCheckBox" name="checkBox_out_4">
           <property name="text">
            <string>5</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_out_6">
+         <widget class="QCheckBox" name="checkBox_out_5">
           <property name="text">
            <string>6</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_out_7">
+         <widget class="QCheckBox" name="checkBox_out_6">
           <property name="text">
            <string>7</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QCheckBox" name="checkBox_out_8">
+         <widget class="QCheckBox" name="checkBox_out_7">
           <property name="text">
            <string>8</string>
           </property>

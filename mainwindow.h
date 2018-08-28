@@ -18,15 +18,18 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void sceneNew();
+    void sceneDraw();
 
 private slots:
     void on_actionCreate_triggered();
+    void create(int,bool*,bool*);
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
-    int size, input[2], output[3];
-    GraphItem *pipeRow[7][8], *pipeCol[8][7], *square[8][8];
+    int size; bool input[8], output[8];
+    GraphItem *pipeRow[7][8], *pipeCol[8][7], *square[8][8], *pipeIn[8 ], *pipeOut[8];
 };
 
 #endif // MAINWINDOW_H

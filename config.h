@@ -20,6 +20,9 @@ public:
     explicit Config(QWidget *parent = 0);
     ~Config();
 
+signals:
+    void finish(int,bool*,bool*);
+
 private slots:
     void on_pushButton_clicked();
 

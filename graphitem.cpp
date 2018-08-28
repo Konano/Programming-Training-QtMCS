@@ -26,7 +26,7 @@ void GraphItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     }
     else
     {
-        brush.setColor(Qt::red);
+        brush.setColor(Qt::gray);
     }
 
     painter->fillRect(rec, brush);
