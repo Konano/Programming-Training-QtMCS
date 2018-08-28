@@ -12,3 +12,10 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_actionCreate_triggered()
+{
+    qDebug("Test");
+    Config config(this);
+    config.exec();
+}
