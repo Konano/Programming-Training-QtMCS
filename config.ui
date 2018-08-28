@@ -16,12 +16,12 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>21</x>
      <y>31</y>
-     <width>227</width>
+     <width>232</width>
      <height>235</height>
     </rect>
    </property>
@@ -57,7 +57,7 @@
         <item>
          <widget class="QLabel" name="label_input">
           <property name="text">
-           <string>输入列(2)</string>
+           <string>输入管道(2)</string>
           </property>
          </widget>
         </item>
@@ -147,7 +147,7 @@
         <item>
          <widget class="QLabel" name="label_output">
           <property name="text">
-           <string>输出列(3)</string>
+           <string>输出管道(3)</string>
           </property>
          </widget>
         </item>
@@ -273,26 +273,6 @@
     </item>
    </layout>
   </widget>
-  <zorder>label_size</zorder>
-  <zorder>label_input</zorder>
-  <zorder>label_output</zorder>
-  <zorder>sizeEdit</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>layoutWidget</zorder>
-  <zorder>horizontalSpacer</zorder>
-  <zorder>horizontalSpacer_2</zorder>
-  <zorder>verticalSpacer</zorder>
-  <zorder>verticalSpacer_2</zorder>
-  <zorder>pushButton</zorder>
-  <zorder>checkBox_out_1</zorder>
-  <zorder>checkBox_out_2</zorder>
-  <zorder>checkBox_out_3</zorder>
-  <zorder>checkBox_out_4</zorder>
-  <zorder>checkBox_out_5</zorder>
-  <zorder>checkBox_out_6</zorder>
-  <zorder>checkBox_out_7</zorder>
-  <zorder>checkBox_out_8</zorder>
-  <zorder>layoutWidget</zorder>
  </widget>
  <resources/>
  <connections/>
