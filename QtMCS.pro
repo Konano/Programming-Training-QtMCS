@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     config.cpp \
-    graphitem.cpp
+    graphitem.cpp \
+    calculate.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
-    graphitem.h
+    graphitem.h \
+    calculate.h
 
 FORMS    += mainwindow.ui \
     config.ui

@@ -27,6 +27,8 @@ private slots:
 
     void on_actionRandom_triggered();
 
+    void on_actionSimulation_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;

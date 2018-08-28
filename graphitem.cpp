@@ -1,22 +1,17 @@
 #include "graphitem.h"
 #include <QDebug>
 
-GraphItem::GraphItem(int _x, int _y, int _width, int _height, bool _NotChange)
+GraphItem::GraphItem(int _x, int _y, int _width, int _height, bool _NotChange, QObject *parent) :
+    Enable(true), NotChange(_NotChange), x(_x), y(_y), width(_width), height(_height), QObject(parent)
 {
-    x = _x;
-    y = _y;
-    width = _width;
-    height = _height;
-    Enable = true;
-    NotChange = _NotChange;
 }
 
 void GraphItem::setAdjacent(GraphItem *adj0, GraphItem *adj1, GraphItem *adj2, GraphItem *adj3)
 {
     adjacent[0] = adj0;
     adjacent[1] = adj1;
-    if (adj2) adjacent[2] = adj2;
-    if (adj3) adjacent[3] = adj3;
+    adjacent[2] = adj2;
+    adjacent[3] = adj3;
 }
 
 QRectF GraphItem::boundingRect() const
@@ -74,7 +69,7 @@ void GraphItem::closePipe()
     if (Enable == true) switchPipe();
 }
 
-void GraphItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void GraphItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (NotChange == false) switchPipe();
     QGraphicsItem::mousePressEvent(event);

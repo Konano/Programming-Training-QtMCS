@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "config.h"
+#include "calculate.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -121,4 +122,23 @@ void MainWindow::on_actionRandom_triggered()
                 pipeCol[i][j]->openPipe();
             else
                 pipeCol[i][j]->closePipe();
+}
+
+void MainWindow::on_actionSimulation_triggered()
+{
+    int i1=0; while (!input[i1]) i1++;
+    int i2=i1+1; while (!input[i2]) i2++;
+    int o1=0; while (!output[o1]) o1++;
+    int o2=o1+1; while (!output[o2]) o2++;
+    int o3=o2+1; while (!output[o3]) o3++;
+    vector<double> length;
+    for(int i=0; i<size; i++)
+        for(int j=0; j<size-1; j++)
+            if (pipeCol[i][j]->Enable) length.push_back(1); else length.push_back(0);
+    for(int i=0; i<size-1; i++)
+        for(int j=0; j<size; j++)
+            if (pipeRow[i][j]->Enable) length.push_back(1); else length.push_back(0);
+    for(int i=0; i<2+3; i++) length.push_back(1);
+    vector<double> result = caluconspeed(size, length, i1, i2, o1, o2, o3);
+    qDebug() << result[0] << result[1] << result[2] << endl;
 }
