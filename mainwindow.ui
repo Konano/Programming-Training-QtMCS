@@ -77,7 +77,6 @@
    </attribute>
    <addaction name="actionCreate"/>
    <addaction name="actionRandom"/>
-   <addaction name="actionSimulation"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionCreate">
@@ -88,11 +87,6 @@
   <action name="actionRandom">
    <property name="text">
     <string>Random</string>
-   </property>
-  </action>
-  <action name="actionSimulation">
-   <property name="text">
-    <string>Simulation</string>
    </property>
   </action>
  </widget>

@@ -20,20 +20,23 @@ public:
     ~MainWindow();
     void sceneNew();
     void sceneDraw();
+    void updateCross();
+    void Simulation();
 
 private slots:
     void on_actionCreate_triggered();
-    void create(int, bool*, bool*);
 
     void on_actionRandom_triggered();
 
-    void on_actionSimulation_triggered();
+    void create(int, bool*, bool*);
+    void chipChanged();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     int size; bool input[8], output[8];
-    GraphItem *pipeRow[7][8], *pipeCol[8][7], *square[8][8], *pipeIn[8], *pipeOut[8];
+    GraphItem *pipeRow[7][8], *pipeCol[8][7], *cross[8][8], *pipeIn[8], *pipeOut[8];
+    QGraphicsTextItem *textitem[3];
 };
 
 #endif // MAINWINDOW_H

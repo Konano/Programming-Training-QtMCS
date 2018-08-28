@@ -2,16 +2,8 @@
 #include <QDebug>
 
 GraphItem::GraphItem(int _x, int _y, int _width, int _height, bool _NotChange, QObject *parent) :
-    Enable(true), NotChange(_NotChange), x(_x), y(_y), width(_width), height(_height), QObject(parent)
+    x(_x), y(_y), width(_width), height(_height), Enable(true), NotChange(_NotChange), QObject(parent)
 {
-}
-
-void GraphItem::setAdjacent(GraphItem *adj0, GraphItem *adj1, GraphItem *adj2, GraphItem *adj3)
-{
-    adjacent[0] = adj0;
-    adjacent[1] = adj1;
-    adjacent[2] = adj2;
-    adjacent[3] = adj3;
 }
 
 QRectF GraphItem::boundingRect() const
@@ -30,47 +22,31 @@ void GraphItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     }
     else
     {
-        brush.setColor(QColor(225,225,225));
+        brush.setColor(Qt::white);
     }
 
     painter->fillRect(rec, brush);
 }
 
-void GraphItem::updateSquare()
-{
-    for(int i=0; i<4; i++) if (adjacent[i] != NULL)
-    {
-        if (adjacent[i]->Enable)
-        {
-            Enable = true;
-            update();
-            return;
-        }
-    }
-    Enable = false;
-    update();
-}
-
-void GraphItem::switchPipe()
+void GraphItem::switchEnable()
 {
     Enable ^= 1;
-    adjacent[0]->updateSquare();
-    adjacent[1]->updateSquare();
+    emit pipeChanged();
     update();
 }
 
-void GraphItem::openPipe()
+void GraphItem::setEnable(bool status)
 {
-    if (Enable == false) switchPipe();
+    if (Enable != status) switchEnable();
 }
 
-void GraphItem::closePipe()
+bool GraphItem::isEnable()
 {
-    if (Enable == true) switchPipe();
+    return Enable;
 }
 
 void GraphItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (NotChange == false) switchPipe();
+    if (NotChange == false) switchEnable();
     QGraphicsItem::mousePressEvent(event);
 }

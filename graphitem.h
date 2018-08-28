@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QDebug>
 
-#define pipeLength 40
+#define pipeLength 45
 #define pipeWidth 5
 
 class GraphItem : public QObject, public QGraphicsItem
@@ -17,15 +17,16 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    bool Enable, NotChange;
-    int x, y, width, height;
-    GraphItem *adjacent[4];
+    void switchEnable();
+    void setEnable(bool status);
+    bool isEnable();
 
-    void setAdjacent(GraphItem *adj0, GraphItem *adj1, GraphItem *adj2 = NULL, GraphItem *adj3 = NULL);
-    void updateSquare();
-    void switchPipe();
-    void openPipe();
-    void closePipe();
+private:
+    int x, y, width, height;
+    bool Enable, NotChange;
+
+signals:
+    void pipeChanged();
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

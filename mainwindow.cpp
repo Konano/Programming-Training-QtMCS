@@ -20,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent) :
     sceneNew();
 }
 
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
 void MainWindow::sceneNew()
 {
     scene = new QGraphicsScene(this);
@@ -37,6 +42,7 @@ void MainWindow::sceneDraw()
         for(int j=0; j<size; j++)
         {
             pipeRow[i][j] = new GraphItem(pipeWidth+i*(pipeLength+pipeWidth), 0+j*(pipeLength+pipeWidth), pipeLength, pipeWidth);
+            connect(pipeRow[i][j], SIGNAL(pipeChanged()), this, SLOT(chipChanged()));
             scene->addItem(pipeRow[i][j]);
         }
 
@@ -44,14 +50,15 @@ void MainWindow::sceneDraw()
         for(int j=0; j<size-1; j++)
         {
             pipeCol[i][j] = new GraphItem(0+i*(pipeLength+pipeWidth), pipeWidth+j*(pipeLength+pipeWidth), pipeWidth, pipeLength);
+            connect(pipeCol[i][j], SIGNAL(pipeChanged()), this, SLOT(chipChanged()));
             scene->addItem(pipeCol[i][j]);
         }
 
     for(int i=0; i<size; i++)
         for(int j=0; j<size; j++)
         {
-            square[i][j] = new GraphItem(0+i*(pipeLength+pipeWidth), 0+j*(pipeLength+pipeWidth), pipeWidth, pipeWidth, true);
-            scene->addItem(square[i][j]);
+            cross[i][j] = new GraphItem(0+i*(pipeLength+pipeWidth), 0+j*(pipeLength+pipeWidth), pipeWidth, pipeWidth, true);
+            scene->addItem(cross[i][j]);
         }
 
     for(int i=0; i<size; i++) if (input[i])
@@ -66,29 +73,16 @@ void MainWindow::sceneDraw()
         scene->addItem(pipeOut[i]);
     }
 
-    // 相邻元素
-
-    for(int i=0; i<size-1; i++)
-        for(int j=0; j<size; j++)
-            pipeRow[i][j]->setAdjacent(square[i][j],
-                                       square[i+1][j]);
-
-    for(int i=0; i<size; i++)
-        for(int j=0; j<size-1; j++)
-            pipeCol[i][j]->setAdjacent(square[i][j],
-                                       square[i][j+1]);
-
-    for(int i=0; i<size; i++)
-        for(int j=0; j<size; j++)
-            square[i][j]->setAdjacent(i<size-1 ? pipeRow[i][j] : NULL,
-                                      j<size-1 ? pipeCol[i][j] : NULL,
-                                      i ? pipeRow[i-1][j] : NULL,
-                                      j ? pipeCol[i][j-1] : NULL);
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
+    int tmp = 0;
+    for(int i=0; i<3; i++)
+    {
+        while (!output[tmp]) tmp++;
+        textitem[i] = new QGraphicsTextItem();
+        textitem[i]->setPos(QPointF(tmp*(pipeLength+pipeWidth)-pipeLength/2,
+                                    pipeWidth+(size-1)*(pipeLength+pipeWidth)+pipeLength/2));
+        scene->addItem(textitem[i]);
+        tmp++;
+    }
 }
 
 void MainWindow::on_actionCreate_triggered()
@@ -105,26 +99,40 @@ void MainWindow::create(int _size, bool *_input, bool *_output)
     for(int i=0; i<size; i++) output[i]=_output[i];
 
     sceneDraw();
+    Simulation();
 }
 
 void MainWindow::on_actionRandom_triggered()
 {
     for(int i=0; i<size-1; i++)
         for(int j=0; j<size; j++)
-            if (rand()%100 < 90)
-                pipeRow[i][j]->openPipe();
-            else
-                pipeRow[i][j]->closePipe();
+            pipeRow[i][j]->setEnable(rand()%100 < 90);
 
     for(int i=0; i<size; i++)
         for(int j=0; j<size-1; j++)
-            if (rand()%100 < 90)
-                pipeCol[i][j]->openPipe();
-            else
-                pipeCol[i][j]->closePipe();
+            pipeCol[i][j]->setEnable(rand()%100 < 90);
 }
 
-void MainWindow::on_actionSimulation_triggered()
+void MainWindow::chipChanged()
+{
+    updateCross();
+    Simulation();
+}
+
+void MainWindow::updateCross()
+{
+    for(int i=0; i<size; i++)
+        for(int j=0; j<size; j++)
+        {
+            if (i<size-1 && pipeRow[i][j]->isEnable()) { cross[i][j]->setEnable(true); continue; }
+            if (j<size-1 && pipeCol[i][j]->isEnable()) { cross[i][j]->setEnable(true); continue; }
+            if (i && pipeRow[i-1][j]->isEnable()) { cross[i][j]->setEnable(true); continue; }
+            if (j && pipeCol[i][j-1]->isEnable()) { cross[i][j]->setEnable(true); continue; }
+            cross[i][j]->setEnable(false);
+        }
+}
+
+void MainWindow::Simulation()
 {
     int i1=0; while (!input[i1]) i1++;
     int i2=i1+1; while (!input[i2]) i2++;
@@ -134,11 +142,14 @@ void MainWindow::on_actionSimulation_triggered()
     vector<double> length;
     for(int i=0; i<size; i++)
         for(int j=0; j<size-1; j++)
-            if (pipeCol[i][j]->Enable) length.push_back(1); else length.push_back(0);
+            if (pipeCol[i][j]->isEnable()) length.push_back(1); else length.push_back(0);
     for(int i=0; i<size-1; i++)
         for(int j=0; j<size; j++)
-            if (pipeRow[i][j]->Enable) length.push_back(1); else length.push_back(0);
+            if (pipeRow[i][j]->isEnable()) length.push_back(1); else length.push_back(0);
     for(int i=0; i<2+3; i++) length.push_back(1);
     vector<double> result = caluconspeed(size, length, i1, i2, o1, o2, o3);
-    qDebug() << result[0] << result[1] << result[2] << endl;
+
+    for(int i=0; i<3; i++)
+        textitem[i]->setPlainText(QString::number(result[i]));
+    update();
 }
