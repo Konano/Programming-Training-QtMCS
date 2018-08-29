@@ -2,13 +2,9 @@
 #define CONFIG_H
 
 #include <QDialog>
-#include <QCheckBox>
-#include <QDebug>
-
-#define InputPipesLimit 2
-#define OutputPipesLimit 3
-#define SizeMinLimit 5
-#define SizeMaxLimit 8
+#include "mainwindow.h"
+#include <QDoubleValidator>
+#include <QIntValidator>
 
 namespace Ui {
 class Config;
@@ -19,22 +15,18 @@ class Config : public QDialog
     Q_OBJECT
 
 public:
-    explicit Config(int size, bool *input, bool *output, QWidget *parent = 0);
+    explicit Config(int inflow0, int inflow1, int random, QWidget *parent = 0);
     ~Config();
 
 signals:
-    void finish(int,bool*,bool*);
+    void finished(int, int, int);
 
 private slots:
-    void on_pushButton_clicked();
-
-    void on_sizeBox_currentIndexChanged(int index);
+	void finish();
 
 private:
     Ui::Config *ui;
-    QCheckBox *inCheckBox[8], *outCheckBox[8];
-
-    void checkBoxEnableChange(int size);
+    QIntValidator *inputLimit, *randomLimit;
 };
 
 #endif // CONFIG_H

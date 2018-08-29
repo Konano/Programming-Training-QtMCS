@@ -14,14 +14,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    config.cpp \
     graphitem.cpp \
-    calculate.cpp
+    calculate.cpp \
+    createconfig.cpp \
+    config.cpp
 
 HEADERS  += mainwindow.h \
-    config.h \
     graphitem.h \
-    calculate.h
+    calculate.h \
+    createconfig.h \
+    config.h
 
 FORMS    += mainwindow.ui \
+    createconfig.ui \
     config.ui

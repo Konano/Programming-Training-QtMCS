@@ -20,10 +20,13 @@ public:
     void switchEnable();
     void setEnable(bool status);
     bool isEnable();
+    void setV(double _v);
+    double getV();
 
 private:
     int x, y, width, height;
     bool Enable, NotChange;
+    double v = 0;
 
 signals:
     void pipeChanged();

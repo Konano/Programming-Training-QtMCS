@@ -43,6 +43,8 @@
 
 #include "calculate.h"
 
+#include <QDebug>
+
 using namespace std;
 #define NAX 0.000000001
 
@@ -256,7 +258,7 @@ void findrect(int x1){
 }
 
 //函数功能：初始化方程组（行列式）的值
-void initrect(){
+void initrect(int if0, int if1){
 	for (int i=0;i<EDGESUM-5; i++)	//不存在的管道液体流速为0
 		if (edges[i].leng == 0)
 		{
@@ -299,11 +301,11 @@ void initrect(){
 	//两个输入端口的流速相同且已知，构成两个方程
 	vector<double> tmp(EDGESUM+1,0);
 	tmp[EDGESUM-5] = 1;
-	tmp[EDGESUM] = 200;
+	tmp[EDGESUM] = if0;
 	addrect(tmp);
 	vector<double> temp(EDGESUM+1,0);
 	temp[EDGESUM-4] = 1;
-	temp[EDGESUM] = 200;
+	temp[EDGESUM] = if1;
 	addrect(temp);
 
 	// cout<<rect.size()<<endl;
@@ -442,7 +444,7 @@ void getans()
 //函数功能：计算芯片所有管道的液体流速
 //参数含义：num，正方形网格的边长（即网格一行的节点数量，比如8X8的网格，一行有8个节点，num为8）；length，存储网格中每个管道的长度，若管道不存在用0表示；i1,i2,o1,o2,o3
 //				分别表示两个输入管道与三个输出管道在第几列。
-vector<double> caluconspeed(int num, vector<double>&length, int i1, int i2, int o1, int o2, int o3)
+vector<double> caluconspeed(int num, vector<double>&length, int i1, int i2, int o1, int o2, int o3, int if0, int if1)
 {
 	rect.clear();
 	n = num;
@@ -504,15 +506,14 @@ vector<double> caluconspeed(int num, vector<double>&length, int i1, int i2, int 
 	{
 		setedgelength(i,length[i]);
 	}
-	edges[EDGESUM-4].v = 200;
-	edges[EDGESUM-5].v = 200;
+	edges[EDGESUM-4].v = if0;
+	edges[EDGESUM-5].v = if1;
 
-	initrect();
+	initrect(if0, if1);
 	getans();
-	vector<double> v(3,0);
-	v[0] = edges[EDGESUM-3].v;
-	v[1] = edges[EDGESUM-2].v;
-	v[2] = edges[EDGESUM-1].v;
+
+	vector<double> v;
+	for(int i=0; i<EDGESUM; i++) v.push_back(edges[i].v);
 	return v;
 }
 

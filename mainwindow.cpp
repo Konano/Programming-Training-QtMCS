@@ -1,8 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "config.h"
+#include "createconfig.h"
 #include "calculate.h"
+#include "config.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
     size = 8;
     for(int i=0; i<size; i++) input[i] = i<2;
     for(int i=0; i<size; i++) output[i] = i<3;
+
+    inflow0 = inflow1 = inflowMaxLimit;
+    random = initRandom;
 
     sceneNew();
     sceneDraw();
@@ -90,8 +94,8 @@ void MainWindow::sceneDraw()
 
 void MainWindow::on_actionCreate_triggered()
 {
-    Config config(size, input, output, this);
-    connect(&config, SIGNAL(finish(int,bool*,bool*)), this, SLOT(create(int,bool*,bool*)));
+    CreateConfig config(size, input, output, this);
+    connect(&config, SIGNAL(finished(int,bool*,bool*)), this, SLOT(create(int,bool*,bool*)));
     config.exec();
 }
 
@@ -110,11 +114,11 @@ void MainWindow::on_actionRandom_triggered()
 
     for(int i=0; i<size-1; i++)
         for(int j=0; j<size; j++)
-            pipeRow[i][j]->setEnable(rand()%100 < 90);
+            pipeRow[i][j]->setEnable(rand()%100 < random);
 
     for(int i=0; i<size; i++)
         for(int j=0; j<size-1; j++)
-            pipeCol[i][j]->setEnable(rand()%100 < 90);
+            pipeCol[i][j]->setEnable(rand()%100 < random);
 
     Randoming = false;
     chipChanged();
@@ -131,14 +135,23 @@ void MainWindow::chipChanged()
 
 void MainWindow::updateCross()
 {
+    double v; int count;
     for(int i=0; i<size; i++)
         for(int j=0; j<size; j++)
         {
-            if (i<size-1 && pipeRow[i][j]->isEnable()) { cross[i][j]->setEnable(true); continue; }
-            if (j<size-1 && pipeCol[i][j]->isEnable()) { cross[i][j]->setEnable(true); continue; }
-            if (i && pipeRow[i-1][j]->isEnable()) { cross[i][j]->setEnable(true); continue; }
-            if (j && pipeCol[i][j-1]->isEnable()) { cross[i][j]->setEnable(true); continue; }
-            cross[i][j]->setEnable(false);
+            v = 0; count = 0;
+            if (i<size-1 && pipeRow[i][j]->isEnable())
+                { cross[i][j]->setEnable(true); count++; v += pipeRow[i][j]->getV(); }
+            if (j<size-1 && pipeCol[i][j]->isEnable())
+                { cross[i][j]->setEnable(true); count++; v += pipeCol[i][j]->getV(); }
+            if (i && pipeRow[i-1][j]->isEnable())
+                { cross[i][j]->setEnable(true); count++; v += pipeRow[i-1][j]->getV(); }
+            if (j && pipeCol[i][j-1]->isEnable())
+                { cross[i][j]->setEnable(true); count++; v += pipeCol[i][j-1]->getV(); }
+            if (!count)
+                cross[i][j]->setEnable(false);
+            else
+                cross[i][j]->setV(v / count);
         }
 }
 
@@ -159,9 +172,40 @@ void MainWindow::Simulation()
             if (pipeRow[i][j]->isEnable()) length.push_back(1); else length.push_back(0);
     for(int i=0; i<2+3; i++) length.push_back(1);
 
-    vector<double> result = caluconspeed(size, length, i1, i2, o1, o2, o3);
+    vector<double> result = caluconspeed(size, length, i1, i2, o1, o2, o3, inflow0, inflow1);
 
     for(int i=0; i<3; i++)
-        textitem[i]->setPlainText(QString::number(result[i]));
+        textitem[i]->setPlainText(QString::number(result[result.size()-3+i]));
+
+    int count = 0;
+    for(int i=0; i<size; i++)
+        for(int j=0; j<size-1; j++)
+            pipeCol[i][j]->setV(result[count++]);
+    for(int i=0; i<size-1; i++)
+        for(int j=0; j<size; j++)
+            pipeRow[i][j]->setV(result[count++]);
+    for(int i=0; i<size; i++) if (input[i])
+        pipeIn[i]->setV(result[count++]);
+    for(int i=0; i<size; i++) if (output[i])
+        pipeOut[i]->setV(result[count++]);
+
+    updateCross();
+
     update();
+}
+
+void MainWindow::on_actionConfig_triggered()
+{
+    Config config(inflow0, inflow1, random, this);
+    connect(&config, SIGNAL(finished(int,int,int)), this, SLOT(updateConfig(int,int,int)));
+    config.exec();
+}
+
+void MainWindow::updateConfig(int i0, int i1, int rd)
+{
+    inflow0 = i0;
+    inflow1 = i1;
+    random = rd;
+
+    Simulation();
 }
