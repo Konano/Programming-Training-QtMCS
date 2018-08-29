@@ -8,6 +8,8 @@
 #define pipeLength 45
 #define pipeWidth 5
 
+extern bool VorC;
+
 class GraphItem : public QObject, public QGraphicsItem
 {
     Q_OBJECT
@@ -22,11 +24,13 @@ public:
     bool isEnable();
     void setV(double _v);
     double getV();
+    void setC(double _c);
+    double getC();
 
 private:
     int x, y, width, height;
     bool Enable, NotChange;
-    double v = 0;
+    double v = 0, c = 50;
 
 signals:
     void pipeChanged();

@@ -78,21 +78,36 @@
    <addaction name="actionCreate"/>
    <addaction name="actionRandom"/>
    <addaction name="actionConfig"/>
+   <addaction name="actionSwitch"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionCreate">
    <property name="text">
     <string>Create</string>
    </property>
+   <property name="toolTip">
+    <string>Create a new chip</string>
+   </property>
   </action>
   <action name="actionRandom">
    <property name="text">
     <string>Random</string>
    </property>
+   <property name="toolTip">
+    <string>Create a new chip randomly</string>
+   </property>
   </action>
   <action name="actionConfig">
    <property name="text">
     <string>Config</string>
+   </property>
+  </action>
+  <action name="actionSwitch">
+   <property name="text">
+    <string>Switch</string>
+   </property>
+   <property name="toolTip">
+    <string>Switch to another view</string>
    </property>
   </action>
  </widget>

@@ -16,6 +16,7 @@ QRectF GraphItem::boundingRect() const
 
 QColor flowColor(double v)
 {
+    v = fabs(v);
     if (v > 250)
         return QColor(255,
                       0,
@@ -34,12 +35,10 @@ QColor flowColor(double v)
                       std::min(std::max((int)round((v+50)/100*256-0.5),0),255));
 }
 
-QColor mixColor(double c)
+QColor concenColor(double c)
 {
-    if (c > 100)
-        return QColor(255,
-                      0,
-                      0);
+    if (c < -0.1)
+        return Qt::white;
     else if (c > 60)
         return QColor(std::min(std::max((int)round((c-60)/40*256-0.5),0),255),
                       std::min(std::max((int)round((100-c)/40*256-0.5),0),255),
@@ -61,7 +60,10 @@ void GraphItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
     if (Enable)
     {
-        brush.setColor(flowColor(v));
+        if (VorC)
+            brush.setColor(flowColor(v));
+        else
+            brush.setColor(concenColor(c));
     }
     else
     {
@@ -96,7 +98,9 @@ void GraphItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    if (Enable) emit hoverEnter(QString("Flow rate in the pipe: ")+QString::number(v));
+    if (Enable) emit hoverEnter(QString("In this pipe: ") +
+                                QString("Flow rate ") + QString::number(v) +
+                                QString(" Concentration ") + QString::number(c));
 }
 
 void GraphItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
@@ -113,4 +117,15 @@ void GraphItem::setV(double _v)
 double GraphItem::getV()
 {
     return v;
+}
+
+void GraphItem::setC(double _c)
+{
+    c = _c;
+    update();
+}
+
+double GraphItem::getC()
+{
+    return c;
 }

@@ -15,18 +15,18 @@ class Config : public QDialog
     Q_OBJECT
 
 public:
-    explicit Config(int inflow0, int inflow1, int random, QWidget *parent = 0);
+    explicit Config(int inFlow0, int inFlow1, int inConcen0, int inConcen1, int random, QWidget *parent = 0);
     ~Config();
 
 signals:
-    void finished(int, int, int);
+    void finished(int, int, int, int, int);
 
 private slots:
 	void finish();
 
 private:
     Ui::Config *ui;
-    QIntValidator *inputLimit, *randomLimit;
+    QIntValidator *flowLimit, *hundredLimit;
 };
 
 #endif // CONFIG_H

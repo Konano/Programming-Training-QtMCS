@@ -17,7 +17,7 @@ SOURCES += main.cpp\
     graphitem.cpp \
     createconfig.cpp \
     config.cpp \
-    _calculate.cpp
+    calculate.cpp
 
 HEADERS  += mainwindow.h \
     graphitem.h \

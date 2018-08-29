@@ -5,6 +5,8 @@
 #include "calculate.h"
 #include "config.h"
 
+bool VorC;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -18,8 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
     for(int i=0; i<size; i++) input[i] = i<2;
     for(int i=0; i<size; i++) output[i] = i<3;
 
-    inflow0 = inflow1 = inflowMaxLimit;
+    inFlow0 = inFlow1 = inflowMaxLimit;
+    inConcen0 = 0;
+    inConcen1 = 100;
     random = initRandom;
+
+    VorC = true;
 
     sceneNew();
     sceneDraw();
@@ -133,29 +139,31 @@ void MainWindow::chipChanged()
     if (!Randoming)
     {
         updateCross();
+        updateText();
         Simulation();
     }
 }
 
 void MainWindow::updateCross()
 {
-    double v; int count;
+    double v, c; int count;
     for(int i=0; i<size; i++)
         for(int j=0; j<size; j++)
         {
-            v = 0; count = 0;
+            v = c = 0; count = 0;
             if (i<size-1 && pipeRow[i][j]->isEnable())
-                { cross[i][j]->setEnable(true); count++; v += pipeRow[i][j]->getV(); }
+                { cross[i][j]->setEnable(true); count++; v += pipeRow[i][j]->getV(); c += pipeRow[i][j]->getC(); }
             if (j<size-1 && pipeCol[i][j]->isEnable())
-                { cross[i][j]->setEnable(true); count++; v += pipeCol[i][j]->getV(); }
+                { cross[i][j]->setEnable(true); count++; v += pipeCol[i][j]->getV(); c += pipeCol[i][j]->getC(); }
             if (i && pipeRow[i-1][j]->isEnable())
-                { cross[i][j]->setEnable(true); count++; v += pipeRow[i-1][j]->getV(); }
+                { cross[i][j]->setEnable(true); count++; v += pipeRow[i-1][j]->getV(); c += pipeRow[i-1][j]->getC(); }
             if (j && pipeCol[i][j-1]->isEnable())
-                { cross[i][j]->setEnable(true); count++; v += pipeCol[i][j-1]->getV(); }
+                { cross[i][j]->setEnable(true); count++; v += pipeCol[i][j-1]->getV(); c += pipeCol[i][j-1]->getC(); }
             if (!count)
                 cross[i][j]->setEnable(false);
             else
-                cross[i][j]->setV(v / count);
+                cross[i][j]->setV(v / count),
+                cross[i][j]->setC(c / count);
         }
 }
 
@@ -176,40 +184,60 @@ void MainWindow::Simulation()
             if (pipeRow[i][j]->isEnable()) length.push_back(1); else length.push_back(0);
     for(int i=0; i<2+3; i++) length.push_back(1);
 
-    vector<double> result = caluconspeed(size, length, i1, i2, o1, o2, o3, inflow0, inflow1);
+    vector<double> result = caluconspeed(size, length, i1, i2, o1, o2, o3, inFlow0, inFlow1);
 
-    for(int i=0; i<3; i++)
-        textitem[i]->setPlainText(QString::number(result[result.size()-3+i]));
+    vector<double> concen = calconcen(size, length, result, i1, i2, o1, o2, o3, inConcen0, inConcen1);
 
     int count = 0;
     for(int i=0; i<size; i++)
         for(int j=0; j<size-1; j++)
-            pipeCol[i][j]->setV(result[count++]);
+            pipeCol[i][j]->setV(result[count]),
+            pipeCol[i][j]->setC(concen[count++]);
     for(int i=0; i<size-1; i++)
         for(int j=0; j<size; j++)
-            pipeRow[i][j]->setV(result[count++]);
+            pipeRow[i][j]->setV(result[count]),
+            pipeRow[i][j]->setC(concen[count++]);
     for(int i=0; i<size; i++) if (input[i])
-        pipeIn[i]->setV(result[count++]);
+        pipeIn[i]->setV(result[count]),
+        pipeIn[i]->setC(concen[count++]);
     for(int i=0; i<size; i++) if (output[i])
-        pipeOut[i]->setV(result[count++]);
+        pipeOut[i]->setV(result[count]),
+        pipeOut[i]->setC(concen[count++]);
 
     updateCross();
+    updateText();
 
     update();
 }
 
+void MainWindow::updateText()
+{
+    for(int i=0, a=0; i<size; i++) if (output[i])
+        textitem[a++]->setPlainText(QString::number(VorC ? pipeOut[i]->getV() : pipeOut[i]->getC()));
+    this->setWindowTitle(QString(VorC?"QtMCS (Mode: FlowRate)":"QtMCS (Mode: Concentration)"));
+}
+
 void MainWindow::on_actionConfig_triggered()
 {
-    Config config(inflow0, inflow1, random, this);
-    connect(&config, SIGNAL(finished(int,int,int)), this, SLOT(updateConfig(int,int,int)));
+    Config config(inFlow0, inFlow1, inConcen0, inConcen1, random, this);
+    connect(&config, SIGNAL(finished(int,int,int,int,int)), this, SLOT(updateConfig(int,int,int,int,int)));
     config.exec();
 }
 
-void MainWindow::updateConfig(int i0, int i1, int rd)
+void MainWindow::updateConfig(int i0, int i1, int c0, int c1, int rd)
 {
-    inflow0 = i0;
-    inflow1 = i1;
+    inFlow0 = i0;
+    inFlow1 = i1;
+    inConcen0 = c0;
+    inConcen1 = c1;
     random = rd;
 
     Simulation();
+}
+
+void MainWindow::on_actionSwitch_triggered()
+{
+    VorC ^= 1;
+    updateText();
+    update();
 }

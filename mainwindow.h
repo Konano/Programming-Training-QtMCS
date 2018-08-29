@@ -24,6 +24,7 @@ public:
     void sceneNew();
     void sceneDraw();
     void updateCross();
+    void updateText();
     void Simulation();
 
 private slots:
@@ -34,8 +35,9 @@ private slots:
     void on_actionConfig_triggered();
 
     void create(int, bool*, bool*);
-    void updateConfig(int, int, int);
+    void updateConfig(int, int, int, int, int);
     void chipChanged();
+    void on_actionSwitch_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -45,8 +47,9 @@ private:
     GraphItem *pipeRow[7][8], *pipeCol[8][7], *cross[8][8], *pipeIn[8], *pipeOut[8];
     QGraphicsTextItem *textitem[3];
     bool Randoming = false;
-    int inflow0, inflow1;
+    int inFlow0, inFlow1;
     int random;
+    int inConcen0, inConcen1;
 };
 
 #endif // MAINWINDOW_H

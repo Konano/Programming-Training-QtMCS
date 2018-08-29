@@ -29,52 +29,79 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
      <x>40</x>
      <y>30</y>
-     <width>241</width>
-     <height>111</height>
+     <width>279</width>
+     <height>171</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_input0">
-      <property name="text">
-       <string>输入左管流速(0-200)</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
-     <widget class="QLineEdit" name="lineEdit_input0">
+     <widget class="QLineEdit" name="lineEdit_flow0">
       <property name="text">
        <string/>
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="lineEdit_random"/>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_flow1">
+      <property name="text">
+       <string>输入右管流速(0-200)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lineEdit_flow1"/>
     </item>
     <item row="2" column="0">
+     <widget class="QLabel" name="label_concen0">
+      <property name="text">
+       <string>输入左管浓度(0-100)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="lineEdit_concen0"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_concen1">
+      <property name="text">
+       <string>输入右管浓度(0-100)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="lineEdit_concen1"/>
+    </item>
+    <item row="4" column="0">
      <widget class="QLabel" name="label_random">
       <property name="text">
        <string>Random 模式成边概率(%) </string>
       </property>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="lineEdit_input1"/>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="lineEdit_random"/>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_input1">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_flow0">
       <property name="text">
-       <string>输入右管流速(0-200)</string>
+       <string>输入左管流速(0-200)</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
+  <zorder>buttonBox</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>label_concen0</zorder>
+  <zorder>lineEdit_concen0</zorder>
+  <zorder>label_concen1</zorder>
+  <zorder>lineEdit_concen1</zorder>
+  <zorder>label_flow0</zorder>
  </widget>
  <resources/>
  <connections/>
