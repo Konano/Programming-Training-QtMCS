@@ -16,14 +16,42 @@ QRectF GraphItem::boundingRect() const
 
 QColor flowColor(double v)
 {
-    if (v > 300)
-        return QColor(std::min(std::max((int)round((400-v)/100*256-0.5),0),255),
+    if (v > 250)
+        return QColor(255,
                       0,
                       0);
+    else if (v > 150)
+        return QColor(std::min(std::max((int)round((v-150)/100*256-0.5),0),255),
+                      std::min(std::max((int)round((250-v)/100*256-0.5),0),255),
+                      0);
+    else if (v > 50)
+        return QColor(0,
+                      std::min(std::max((int)round((v-50)/100*256-0.5),0),255),
+                      std::min(std::max((int)round((150-v)/100*256-0.5),0),255));
     else
-        return QColor(std::min(std::max((int)round((v-150)/150*256-0.5),0),255),
-                      std::min(std::max((int)round((150-fabs(v-150))/150*256-0.5),0),255),
-                      std::min(std::max((int)round((150-v)/150*256-0.5),0),255));
+        return QColor(std::min(std::max((int)round((50-v)/100*256-0.5),0),255),
+                      0,
+                      std::min(std::max((int)round((v+50)/100*256-0.5),0),255));
+}
+
+QColor mixColor(double c)
+{
+    if (c > 100)
+        return QColor(255,
+                      0,
+                      0);
+    else if (c > 60)
+        return QColor(std::min(std::max((int)round((c-60)/40*256-0.5),0),255),
+                      std::min(std::max((int)round((100-c)/40*256-0.5),0),255),
+                      0);
+    else if (c > 20)
+        return QColor(0,
+                      std::min(std::max((int)round((c-20)/40*256-0.5),0),255),
+                      std::min(std::max((int)round((60-c)/40*256-0.5),0),255));
+    else
+        return QColor(std::min(std::max((int)round((20-c)/40*256-0.5),0),255),
+                      0,
+                      std::min(std::max((int)round((c+20)/40*256-0.5),0),255));
 }
 
 void GraphItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
