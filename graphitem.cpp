@@ -6,6 +6,7 @@
 GraphItem::GraphItem(int _x, int _y, int _width, int _height, bool _NotChange, QObject *parent) :
     x(_x), y(_y), width(_width), height(_height), Enable(true), NotChange(_NotChange), QObject(parent)
 {
+    if (_NotChange == false) setAcceptHoverEvents(true);
 }
 
 QRectF GraphItem::boundingRect() const
@@ -63,6 +64,16 @@ void GraphItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (NotChange == false) switchEnable();
     QGraphicsItem::mousePressEvent(event);
+}
+
+void GraphItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (Enable) emit hoverEnter(QString("Flow rate in the pipe: ")+QString::number(v));
+}
+
+void GraphItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    if (Enable) emit hoverLeave();
 }
 
 void GraphItem::setV(double _v)

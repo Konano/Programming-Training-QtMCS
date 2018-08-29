@@ -48,6 +48,8 @@ void MainWindow::sceneDraw()
         {
             pipeRow[i][j] = new GraphItem(pipeWidth+i*(pipeLength+pipeWidth), 0+j*(pipeLength+pipeWidth), pipeLength, pipeWidth);
             connect(pipeRow[i][j], SIGNAL(pipeChanged()), this, SLOT(chipChanged()));
+            connect(pipeRow[i][j], SIGNAL(hoverEnter(QString)), ui->statusBar, SLOT(showMessage(QString)));
+            connect(pipeRow[i][j], SIGNAL(hoverLeave()), ui->statusBar, SLOT(clearMessage()));
             scene->addItem(pipeRow[i][j]);
         }
 
@@ -56,6 +58,8 @@ void MainWindow::sceneDraw()
         {
             pipeCol[i][j] = new GraphItem(0+i*(pipeLength+pipeWidth), pipeWidth+j*(pipeLength+pipeWidth), pipeWidth, pipeLength);
             connect(pipeCol[i][j], SIGNAL(pipeChanged()), this, SLOT(chipChanged()));
+            connect(pipeCol[i][j], SIGNAL(hoverEnter(QString)), ui->statusBar, SLOT(showMessage(QString)));
+            connect(pipeCol[i][j], SIGNAL(hoverLeave()), ui->statusBar, SLOT(clearMessage()));
             scene->addItem(pipeCol[i][j]);
         }
 
